@@ -38,7 +38,7 @@ namespace SensorsAnalytics
     {
         public readonly static string ANDROID_VERSION = "4.4.3";
         public readonly static string IOS_VERSION = "2.1.17";
-        public readonly static string UNITY_VERSION = "1.0.1";
+        public readonly static string UNITY_VERSION = "1.0.2";
         /// <summary>
         /// 当前 Unity SDK 版本
         /// </summary>
@@ -247,6 +247,15 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
+        /// 在 Unity 的 deeplink 回调中调用此方法会唤起 Android 或 iOS 的调试、点击图、可视化全埋点的 Dialog。
+        /// Android 或 iOS SDK 会根据 url 来判断是否需要处理，如果能够处理就会弹出 Dialog。
+        /// </summary>
+        /// <param name="url">deeplink url</param>
+        public static void HandleSchemeUrl(string url)
+        {
+            analyticsWrapper.HandleSchemeUrl(url);
+        }
+
         /// 用于 App 首次启动时追踪渠道来源并设置渠道事件的属性
         /// </summary>
         /// <param name="properties">事件的属性</param>

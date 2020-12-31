@@ -169,8 +169,15 @@ namespace SensorsAnalytics.Wrapper
         }
         #endregion
 
-        //二期内容
+        private void _handleSchemeUrl(string url)
+        {
+            AndroidJavaObject currentContext = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaObject intentObj = currentContext.Call<AndroidJavaObject>("getIntent");
+            AndroidJavaObject sensorsDataUtilsObj = new AndroidJavaClass("com.sensorsdata.analytics.android.sdk.util.SensorsDataUtils");
+            sensorsDataUtilsObj.CallStatic("handleSchemeUrl", currentContext, intentObj);
+        }
 
+        //二期内容
         private void _trackInstallation(Dictionary<string, object> properties = null, bool disableCallback = false)
         {
             AndroidJavaObject jsonObject = null;
@@ -212,36 +219,32 @@ namespace SensorsAnalytics.Wrapper
             apiInstance.Call("setFlushNetworkPolicy", types);
         }
 
-       /* private class AndroidSuperDynamicCallback : AndroidJavaProxy
-        {
-            private IDynamicSuperProperties superProperties;
-            public AndroidSuperDynamicCallback(IDynamicSuperProperties superProperties) : base("com.sensorsdata.analytics.android.sdk.SensorsDataDynamicSuperProperties")
-            {
-                this.superProperties = superProperties;
-            }
+        /* private class AndroidSuperDynamicCallback : AndroidJavaProxy
+         {
+             private IDynamicSuperProperties superProperties;
+             public AndroidSuperDynamicCallback(IDynamicSuperProperties superProperties) : base("com.sensorsdata.analytics.android.sdk.SensorsDataDynamicSuperProperties")
+             {
+                 this.superProperties = superProperties;
+             }
 
-            AndroidJavaObject getDynamicSuperProperties()
-            {
-                if (this.superProperties != null)
-                {
-                    Dictionary<string, object> dic = superProperties.getProperties();
-                    string jsonStr = SAUtils.Parse2JsonStr(dic);
-                    AndroidJavaObject jsonObject = SAUtils.Parse2JavaJSONObject(jsonStr);
-                    return jsonObject;
-                }
-                return null;
-            }
-        }
+             AndroidJavaObject getDynamicSuperProperties()
+             {
+                 if (this.superProperties != null)
+                 {
+                     Dictionary<string, object> dic = superProperties.getProperties();
+                     string jsonStr = SAUtils.Parse2JsonStr(dic);
+                     AndroidJavaObject jsonObject = SAUtils.Parse2JavaJSONObject(jsonStr);
+                     return jsonObject;
+                 }
+                 return null;
+             }
+         }
 
-        private void _registerDynamciSuperProperties(IDynamicSuperProperties superProperties)
-        {
-            AndroidSuperDynamicCallback callback = new AndroidSuperDynamicCallback(superProperties);
-            apiInstance.Call("registerDynamicSuperProperties", callback);
-        }*/
-
-     
+         private void _registerDynamciSuperProperties(IDynamicSuperProperties superProperties)
+         {
+             AndroidSuperDynamicCallback callback = new AndroidSuperDynamicCallback(superProperties);
+             apiInstance.Call("registerDynamicSuperProperties", callback);
+         }*/
 #endif
-
-
     }
 }

@@ -129,6 +129,11 @@ namespace SensorsAnalytics.Wrapper
             _clearSuperProperties();
         }
 
+        public void HandleSchemeUrl(string url)
+        {
+            _handleSchemeUrl(url);
+        }
+
         //二期内容
         public void TrackInstallation(Dictionary<string, object> properties = null, bool disableCallback = false)
         {

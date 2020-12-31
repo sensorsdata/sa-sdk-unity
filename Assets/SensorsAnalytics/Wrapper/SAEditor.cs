@@ -116,6 +116,11 @@ namespace SensorsAnalytics.Wrapper
             SALog.Debug("Editor Log: calling clearSuperProperties.");
         }
 
+        private void _handleSchemeUrl(string url)
+        {
+            SALog.Debug("editor handle scheme: " + url);
+        }
+
         //二期内容
         private void _trackInstallation(Dictionary<string, object> properties = null, bool disableCallback = false)
         {

@@ -59,7 +59,8 @@ namespace SensorsAnalytics.Wrapper
         private static extern string get_super_properties();
         [DllImport("__Internal")]
         private static extern void identify(string anonymousId);
-
+        [DllImport("__Internal")]
+        private static extern void handle_scheme_url(string url);
         [DllImport("__Internal")]
         private static extern void delete_all();
         [DllImport("__Internal")]
@@ -149,6 +150,11 @@ namespace SensorsAnalytics.Wrapper
             profile_set(SAUtils.Parse2JsonStr(dic));
         }
 
+        private void _handleSchemeUrl(string url)
+        {
+            handle_scheme_url(url);
+        }
+        
         private void _profileSetOnce(Dictionary<string, object> dic)
         {
             profile_set_once(SAUtils.Parse2JsonStr(dic));
@@ -209,8 +215,6 @@ namespace SensorsAnalytics.Wrapper
         #endregion
 
 #endif
-
-
 
     }
 }

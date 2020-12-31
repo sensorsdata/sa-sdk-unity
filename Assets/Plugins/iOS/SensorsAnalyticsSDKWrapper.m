@@ -96,6 +96,11 @@ void clear_super_properties() {
     [[SensorsAnalyticsSDK sharedInstance] clearSuperProperties];
 }
 
+void handle_scheme_url(const char *url) {
+    NSURL *URL = [NSURL URLWithString:[NSString stringWithCString:url encoding:NSUTF8StringEncoding]];
+    [[SensorsAnalyticsSDK sharedInstance] handleSchemeUrl:URL];
+}
+
 #pragma mark - 二期接口
 void delete_all() {
     [[SensorsAnalyticsSDK sharedInstance] deleteAll];

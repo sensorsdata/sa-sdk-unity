@@ -19,10 +19,12 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
     void Awake()
     {
         print("sample awake====");
-
-       
     }
 
+    private void handSchemeUrl(string url)
+    {
+
+    }
 
     private void OnGUI()
     {
