@@ -38,7 +38,7 @@ namespace SensorsAnalytics
     {
         public readonly static string ANDROID_VERSION = "4.4.3";
         public readonly static string IOS_VERSION = "2.1.17";
-        public readonly static string UNITY_VERSION = "1.0.2";
+        public readonly static string UNITY_VERSION = "1.0.3";
         /// <summary>
         /// 当前 Unity SDK 版本
         /// </summary>
@@ -331,7 +331,6 @@ namespace SensorsAnalytics
             analyticsWrapper.SetFlushNetworkPolicy(types);
         }
 
-
        /* /// <summary>
         /// 注册动态公共属性
         /// </summary>
@@ -343,4 +342,3 @@ namespace SensorsAnalytics
     }
 
 }
-

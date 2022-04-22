@@ -22,7 +22,7 @@ namespace SensorsAnalytics.Wrapper
 {
     public partial class SensorsAnalyticsWrapper
     {
-#if UNITY_ANDROID
+#if (UNITY_ANDROID && !UNITY_EDITOR)
 
         private static readonly AndroidJavaClass sensorsDataAPIClass = new AndroidJavaClass("com.sensorsdata.analytics.android.sdk.SensorsDataAPI");
         private AndroidJavaObject apiInstance;

@@ -23,7 +23,7 @@ namespace SensorsAnalytics.Wrapper
 {
     public partial class SensorsAnalyticsWrapper
     {
-#if UNITY_IOS
+#if (UNITY_IOS && !UNITY_EDITOR)
         [DllImport("__Internal")]
         private static extern void start(string server_url, bool enableLog, int eventType, int networkType);
         [DllImport("__Internal")]
@@ -154,7 +154,7 @@ namespace SensorsAnalytics.Wrapper
         {
             handle_scheme_url(url);
         }
-        
+
         private void _profileSetOnce(Dictionary<string, object> dic)
         {
             profile_set_once(SAUtils.Parse2JsonStr(dic));

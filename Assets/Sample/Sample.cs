@@ -51,7 +51,7 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             print("Track an Event.");
             SensorsDataAPI.Track("Jjcheng112", dictionary);
         }
-        
+
        
         GUILayout.Space(20);
 
@@ -62,7 +62,7 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             {
                 SceneManager.LoadScene("Sample");
             }
-            
+
             GUILayout.Space(20);
             if (GUILayout.Button("set android max cache size"))
             {

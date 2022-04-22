@@ -23,7 +23,7 @@ namespace SensorsAnalytics.Wrapper
     public partial class SensorsAnalyticsWrapper
     {
 
-#if (UNITY_EDITOR && !(UNITY_ANDROID || UNITY_IOS))
+#if UNITY_EDITOR
         private void _init()
         {
             SALog.Debug("Editor Log: calling init.");
