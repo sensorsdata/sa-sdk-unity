@@ -47,9 +47,9 @@ namespace SensorsAnalytics.Wrapper
             apiInstance.Call("flush");
         }
 
-        private void _identify(string distinctId)
+        private void _identify(string anonymousId)
         {
-            apiInstance.Call("identify", distinctId);
+            apiInstance.Call("identify", anonymousId);
         }
 
         private void _resetAnonymousId()

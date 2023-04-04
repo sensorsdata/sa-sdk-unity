@@ -6,26 +6,33 @@ using UnityEngine;
 public class SA_Inspector : Editor
 {
 
-    bool isEnalbeLog = true;
+    bool isEnableLog = false;
     string serverUrl = "";
     GUIStyle titleStyle;
-    GUIStyle labelStyle;
+    GUIStyle labelStyle;    //网络类型配置    int finalNetworkType = 0;
+    //全埋点相关的配置
+    int finalAutoTrackType = 0;
 
     private void OnEnable()
     {
-        isEnalbeLog = this.serializedObject.FindProperty("isEnableLog").boolValue;
+        isEnableLog = this.serializedObject.FindProperty("isEnableLog").boolValue;
         serverUrl = this.serializedObject.FindProperty("serverUrl").stringValue;
-        //finalResult = this.serializedObject.FindProperty("autoTrackType").intValue;
+        finalAutoTrackType = this.serializedObject.FindProperty("autoTrackType").intValue;
         finalNetworkType = this.serializedObject.FindProperty("networkType").intValue;
+
+        // 标题样式
         titleStyle = new GUIStyle();
-        titleStyle.fontSize = 15;
+        titleStyle.fontSize = 16;
         titleStyle.fontStyle = FontStyle.Bold;
         titleStyle.normal.textColor = Color.white;
 
+        // 开关配置样式
         labelStyle = new GUIStyle();
         labelStyle.fontStyle = FontStyle.Bold;
+        labelStyle.normal.textColor = Color.white;
     }
 
+    // 自定义绘制 Inspector 界面
     public override void OnInspectorGUI()
     {
         base.DrawDefaultInspector();
@@ -33,13 +40,15 @@ public class SA_Inspector : Editor
         EditorGUILayout.LabelField("SensorsData Unity SDK Config", titleStyle);
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Version", SensorsDataAPI.SDK_VERSION);
+
+        // 初始化配置
         serverUrl = EditorGUILayout.TextField("Server Url", serverUrl);
 
         SensorsDataAPI sensorsDataAPI = (SensorsDataAPI)target;
-        isEnalbeLog = EditorGUILayout.Toggle("Enable Log", isEnalbeLog);
-        //autoTrackTypes();
-        networkTypes();
-        this.serializedObject.FindProperty("isEnableLog").boolValue = isEnalbeLog;
+        isEnableLog = EditorGUILayout.Toggle("Enable Log", isEnableLog);
+        AutoTrackTypes();
+        NetworkTypes();
+        this.serializedObject.FindProperty("isEnableLog").boolValue = isEnableLog;
         this.serializedObject.FindProperty("serverUrl").stringValue = serverUrl;
         this.serializedObject.ApplyModifiedProperties();
     }
@@ -48,28 +57,22 @@ public class SA_Inspector : Editor
     {
     }
 
-    /*
-     //全埋点相关的配置，暂时不需要
-     int finalResult = 0;
-     private void autoTrackTypes()
-     {
-         int tmpResult = 0;
-         EditorGUILayout.LabelField("AutoTrackTypes", labelStyle);
-         if (EditorGUILayout.Toggle("AppStart", (finalResult & 1) != 0))
-         {
-             tmpResult = 1;
-         }
-         if (EditorGUILayout.Toggle("AppEnd", (finalResult & 1 << 1) != 0))
-         {
-             tmpResult |= 1 << 1;
-         }
-         finalResult = tmpResult;
-         this.serializedObject.FindProperty("autoTrackType").intValue = finalResult;
-     }*/
 
-    //网络类型配置
-    int finalNetworkType = 0;
-    private void networkTypes()
+    private void AutoTrackTypes()
+    {
+        int tmpResult = 0;
+        EditorGUILayout.LabelField("AutoTrackTypes", labelStyle);        if (EditorGUILayout.Toggle("AppStart", (finalAutoTrackType & 1) != 0))
+        {
+            tmpResult = 1;
+        }
+        if (EditorGUILayout.Toggle("AppEnd", (finalAutoTrackType & 1 << 1) != 0))
+        {
+            tmpResult |= 1 << 1;
+        }        finalAutoTrackType = tmpResult;
+        this.serializedObject.FindProperty("autoTrackType").intValue = finalAutoTrackType;
+    }
+
+    private void NetworkTypes()
     {
         int tmpResult = 0;
         EditorGUILayout.LabelField("NetworkTypes", labelStyle);

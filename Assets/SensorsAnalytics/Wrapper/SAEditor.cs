@@ -34,9 +34,9 @@ namespace SensorsAnalytics.Wrapper
             SALog.Debug("Editor Log: calling flush.");
         }
 
-        private void _identify(string distinctId)
+        private void _identify(string anonymousId)
         {
-            SALog.Debug("Editor Log: calling identity: distinctId=" + distinctId + ".");
+            SALog.Debug("Editor Log: calling identity: anonymousId=" + anonymousId + ".");
         }
 
         private void _resetAnonymousId()
@@ -124,7 +124,7 @@ namespace SensorsAnalytics.Wrapper
         //二期内容
         private void _trackInstallation(Dictionary<string, object> properties = null, bool disableCallback = false)
         {
-            SALog.Debug("Editor Log: calling TrackInstallation: properties=" + SAUtils.ToDebugString(properties)+", " + disableCallback);
+            SALog.Debug($"Editor Log: calling TrackInstallation: properties={SAUtils.ToDebugString(properties)}, disableCallback = {disableCallback}");
         }
 
         private void _removeTimer(string eventName)

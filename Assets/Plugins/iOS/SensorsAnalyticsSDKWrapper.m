@@ -12,8 +12,8 @@ void start(const char *url, bool enable_log, int eventType, int network_type) {
     SAConfigOptions *options = [[SAConfigOptions alloc] initWithServerURL:serverURL launchOptions:nil];
     options.autoTrackEventType = eventType;
     options.enableLog = enable_log;
+    options.flushNetworkPolicy = network_type;
     [SensorsAnalyticsSDK startWithConfigOptions:options];
-    [[SensorsAnalyticsSDK sharedInstance] setFlushNetworkPolicy:network_type];
 }
 
 void identify(const char *anonymous_id) {

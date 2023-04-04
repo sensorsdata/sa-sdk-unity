@@ -126,9 +126,9 @@ namespace SensorsAnalytics.Wrapper
             flush();
         }
 
-        private void _identify(string distinctId)
+        private void _identify(string anonymousId)
         {
-            identify(distinctId);
+            identify(anonymousId);
         }
 
         private void _resetAnonymousId()

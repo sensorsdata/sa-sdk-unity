@@ -25,24 +25,26 @@ namespace SensorsAnalytics
 
     public enum NetworkType
     {
-        TYPE_NONE = 0,
+        NONE = 0,
         TYPE_2G = 1,
         TYPE_3G = 1 << 1,
         TYPE_4G = 1 << 2,
         TYPE_WIFI = 1 << 3,
         TYPE_5G = 1 << 4,
         TYPE_ALL = 0xff
+    }    public enum AutoTrackType
+    {
+        None = 0,
+        AppStart = 1,
+        AppEnd = 1 << 1
     }
 
     public class SensorsDataAPI : MonoBehaviour
     {
-        public readonly static string ANDROID_VERSION = "4.4.3";
-        public readonly static string IOS_VERSION = "2.1.17";
-        public readonly static string UNITY_VERSION = "1.0.3";
         /// <summary>
         /// 当前 Unity SDK 版本
         /// </summary>
-        public readonly static string SDK_VERSION = UNITY_VERSION + "_" + ANDROID_VERSION + "_" + IOS_VERSION;
+        public readonly static string SDK_VERSION = "1.0.4";
         [Header("SensorsData Unity SDK Config")]
         [HideInInspector]
         public string serverUrl = "请输入数据接收地址...";
@@ -50,32 +52,35 @@ namespace SensorsAnalytics
         public bool isEnableLog = false;
 
         [HideInInspector]
-        public int autoTrackType = 1 | 1 << 1;
+        public AutoTrackType autoTrackType = AutoTrackType.None;
         [HideInInspector]
-        public int networkType = 1 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4;
+        public NetworkType networkType = NetworkType.TYPE_3G | NetworkType.TYPE_4G | NetworkType.TYPE_5G | NetworkType.TYPE_WIFI;
 
 
         #region internal use
 
         private static SensorsDataAPI saInstance;
-        private static ReaderWriterLockSlim lockObj = new ReaderWriterLockSlim();
+        //private static ReaderWriterLockSlim lockObj = new ReaderWriterLockSlim();
         private static SensorsAnalyticsWrapper analyticsWrapper;
         private static volatile bool isFirstEvent = true;
 
+        // 脚本实例化时调用
         void Awake()
         {
             SALog.Debug("sensorsdataapi awake.");
             if (saInstance == null)
             {
+                // 让游戏对象在场景切换时不被销毁，即使切换到了新的场景仍然存在
                 DontDestroyOnLoad(gameObject);
                 saInstance = this;
             }
             else
             {
+                // 销毁一个游戏对象，即在运行时将其从场景中删除
                 Destroy(gameObject);
                 return;
             }
-            analyticsWrapper = new SensorsAnalyticsWrapper(serverUrl, isEnableLog, autoTrackType, networkType);
+            analyticsWrapper = new SensorsAnalyticsWrapper(serverUrl, isEnableLog, (int)autoTrackType, (int)networkType);
         }
         #endregion
 
@@ -93,7 +98,7 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 上报一条事件
+        /// 触发一条事件
         /// </summary>
         /// <param name="eventName">事件名</param>
         /// <param name="properties">事件属性</param>
@@ -114,7 +119,7 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 触发一次数据上报逻辑，会将缓存中的数据发往服务端
+        /// 触发一次数据上报，会将缓存中的数据发往服务端
         /// </summary>
         public static void Flush()
         {
@@ -164,13 +169,14 @@ namespace SensorsAnalytics
         public static string TrackTimerStart(string eventName)
         {
             return analyticsWrapper.TrackTimerStart(eventName);
-        }
-
-        /// <summary>
-        /// 停止事件计时器，并记录此事件信息
+        }        /// <summary>
+        /// 结束事件计时器，并记录此事件信息
         /// </summary>
-        /// <param name="eventName">事件名称</param>
-        /// <param name="properties">事件属性</param>
+        /// <param name="eventName">事件名称或事件的 eventId</param>
+        /// <param name="properties">自定义属性</param>
+        /// <remarks>
+        /// 多次调用 trackTimerEnd 时，以首次调用为准
+        /// </remarks>
         public static void TrackTimerEnd(string eventName, Dictionary<string, object> properties = null)
         {
             analyticsWrapper.TrackTimerEnd(eventName, properties);
@@ -195,7 +201,7 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 清楚所有的计时器
+        /// 清除所有的计时器
         /// </summary>
         public static void ClearTrackTimer()
         {
@@ -203,7 +209,7 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 注册所有事件都有的公共属性
+        /// 注册每个事件都带有的一些公共属性
         /// </summary>
         /// <param name="properties">事件公共属性</param>
         public static void RegisterSuperProperties(Dictionary<string, object> properties)
@@ -212,7 +218,7 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 删除指定属性名的信息
+        /// 从公共属性中删除某个 property
         /// </summary>
         /// <param name="superPropertyName">属性名</param>
         public static void UnregisterSuperProperty(string superPropertyName)
@@ -238,28 +244,25 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 设置匿名 ID
+        /// 修改匿名 ID
         /// </summary>
-        /// <param name="distinctId">匿名 ID</param>
-        public static void Identify(string distinctId)
+        /// <param name="anonymousId">匿名 ID</param>
+        public static void Identify(string anonymousId)
         {
-            analyticsWrapper.Identify(distinctId);
+            analyticsWrapper.Identify(anonymousId);
         }
 
         /// <summary>
-        /// 在 Unity 的 deeplink 回调中调用此方法会唤起 Android 或 iOS 的调试、点击图、可视化全埋点的 Dialog。
-        /// Android 或 iOS SDK 会根据 url 来判断是否需要处理，如果能够处理就会弹出 Dialog。
+        /// 处理 url scheme 跳转打开 App
+        /// Android 或 iOS SDK 会根据 url 来判断是否需要处理
         /// </summary>
-        /// <param name="url">deeplink url</param>
+        /// <param name="url">打开本 app 的回调的 url</param>
         public static void HandleSchemeUrl(string url)
         {
             analyticsWrapper.HandleSchemeUrl(url);
-        }
-
-        /// 用于 App 首次启动时追踪渠道来源并设置渠道事件的属性
-        /// </summary>
-        /// <param name="properties">事件的属性</param>
-        /// <param name="disableCallback">是否关闭此次渠道匹配的回调请求</param>
+        }        /// <summary>        /// 用于 App 首次启动时追踪渠道来源并设置渠道事件的属性        /// </summary>        /// <param name="properties">事件的属性</param>        /// <param name="disableCallback">是否关闭此次渠道匹配的回调请求</param>
+        /// <remarks>
+        /// 这个接口是一个较为复杂的功能，请在使用前先阅读相关说明: https://sensorsdata.cn/manual/track_installation.html，并在必要时联系我们的技术顾问同学。        /// </remarks>
         public static void TrackAppInstall(Dictionary<string, object> properties = null, bool disableCallback = false)
         {
             analyticsWrapper.TrackInstallation(properties, disableCallback);
@@ -286,7 +289,7 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 设置本地缓存上限值，默认和最小值都是 10000 条
+        /// 设置本地缓存最大事件条数，默认和最小值都是 10000 条
         /// </summary>
         /// <param name="maxCount">最大缓存条数</param>
         public static void SetiOSMaxCacheSize(int maxCount)
@@ -302,12 +305,13 @@ namespace SensorsAnalytics
         public static void DeleteAll()
         {
             analyticsWrapper.DeleteAll();
-        }
-
-        /// <summary>
+        }        /// <summary>
         /// 设置本地缓存日志的最大条目数，最小 50 条
         /// </summary>
         /// <param name="flushBulkSize">缓存数目</param>
+        /// <remarks>
+        /// 默认值为 100，当累积日志量达到阈值时发送数据
+        /// </remarks>
         public static void SetFlushBulkSize(int flushBulkSize)
         {
             analyticsWrapper.SetFlushBulkSize(flushBulkSize);

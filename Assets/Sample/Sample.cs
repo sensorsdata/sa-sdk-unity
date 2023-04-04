@@ -45,11 +45,11 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             dictionary.Add("country", "中国");
-            dictionary.Add("address", dateTime);
+            dictionary.Add("current_time", dateTime);
             //dictionary.Add("test_array", new int[] { 1, 2, 3, 4, 5 });
 
             print("Track an Event.");
-            SensorsDataAPI.Track("Jjcheng112", dictionary);
+            SensorsDataAPI.Track("track_test1", dictionary);
         }
 
        
@@ -127,14 +127,15 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             GUILayout.Space(20);
             if (GUILayout.Button("Identiy"))
             {
-                print("identity test.");
-                SensorsDataAPI.Identify("identify_custom_123");
+                var random = new System.Random();                int randomId = random.Next(100000, 999999);
+                print($"identity test, anonymousId = identify_{randomId}");
+                SensorsDataAPI.Identify($"identify_{randomId}");
             }
             GUILayout.Space(20);
             if (GUILayout.Button("Login"))
             {
                 print("Login test.");
-                SensorsDataAPI.Login("zhangwei_login");
+                SensorsDataAPI.Login("login_test123");
             }
             GUILayout.Space(20);
             if (GUILayout.Button("Logout"))

@@ -35,11 +35,11 @@ namespace SensorsAnalytics.Wrapper
         {
             this.serverUrl = serverUrl;
             this.enableLog = enableLog;
-            this.autoTrackType = 0;
+            this.autoTrackType = autoTrackType;
             this.networkType = networkType;
             SALog.IsLogEnalbe(enableLog);
             SALog.Debug("Unity Config=======init serverUrl:" + serverUrl + ", enableLog:" + enableLog
-                + ", networkType:" + networkType);
+                + ", networkType:" + networkType + ", autoTrackType:" + autoTrackType);
             _init();
         }
 
@@ -49,9 +49,9 @@ namespace SensorsAnalytics.Wrapper
             _flush();
         }
 
-        public void Identify(string distinctId)
+        public void Identify(string anonymousId)
         {
-            _identify(distinctId);
+            _identify(anonymousId);
         }
 
         public void ResetAnonymousId()
