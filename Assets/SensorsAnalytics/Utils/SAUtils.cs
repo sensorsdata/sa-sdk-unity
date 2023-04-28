@@ -134,7 +134,7 @@ namespace SensorDataAnalytics.Utils
             }
             foreach (var value in dic.Values)
             {
-                if (!(value is string || IsNumeric(value) || value is DateTime))//TODO 此处校验不全
+                if (!(value is string || IsNumeric(value) || value is DateTime))
                 {
                     SALog.Error("The property values must be an instance of string, number or DateTime");
                     return false;

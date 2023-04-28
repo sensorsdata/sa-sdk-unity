@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections.Generic;
 using SensorDataAnalytics.Utils;
 using UnityEngine;
@@ -28,10 +29,10 @@ namespace SensorsAnalytics.Wrapper
     {
         private string serverUrl = "";
         private bool enableLog = false;
+        private int networkType = 30;
         private int autoTrackType = 0;
-        private int networkType = 0;
 
-        public SensorsAnalyticsWrapper(string serverUrl, bool enableLog, int autoTrackType, int networkType)
+        public SensorsAnalyticsWrapper(string serverUrl, bool enableLog, int autoTrackType = 0, int networkType = 30, MonoBehaviour mono = null)
         {
             this.serverUrl = serverUrl;
             this.enableLog = enableLog;
@@ -39,9 +40,11 @@ namespace SensorsAnalytics.Wrapper
             this.networkType = networkType;
             SALog.IsLogEnalbe(enableLog);
             SALog.Debug("Unity Config=======init serverUrl:" + serverUrl + ", enableLog:" + enableLog
-                + ", networkType:" + networkType + ", autoTrackType:" + autoTrackType);
-            _init();
-        }
+                + ", networkType:" + networkType);
+ #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+            _init();#else
+         _init(mono);   
+#endif         }
 
 
         public void Flush()
@@ -49,14 +52,9 @@ namespace SensorsAnalytics.Wrapper
             _flush();
         }
 
-        public void Identify(string anonymousId)
+        public void Identify(string distinctId)
         {
-            _identify(anonymousId);
-        }
-
-        public void ResetAnonymousId()
-        {
-            _resetAnonymousId();
+            _identify(distinctId);
         }
 
         public void Login(string loginId)
@@ -147,17 +145,19 @@ namespace SensorsAnalytics.Wrapper
 
         public void SetAndroidMaxCacheSize(long maxCacheSize)
         {
-            #if UNITY_ANDROID
+#if (UNITY_ANDROID && !UNITY_EDITOR)
             _setAndroidMaxCacheSize(maxCacheSize);
-            #endif
+#endif
         }
 
         public void SetiOSMaxCacheSize(int maxCount)
         {
-            #if UNITY_IOS
+#if (UNITY_IOS && !UNITY_EDITOR)
             _setiOSMaxCacheSize(maxCount);
-            #endif
+#endif
         }
+
+        public void SetPCMaxCacheSize(int maxCount)        {#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR            _setPCMaxCacheSize(maxCount);#endif        }
 
         public void DeleteAll()
         {
@@ -179,10 +179,10 @@ namespace SensorsAnalytics.Wrapper
             _setFlushNetworkPolicy(types);
         }
 
-       /* public void RegisterDynamciSuperProperties(IDynamicSuperProperties superProperties)
-        {
-            _registerDynamciSuperProperties(superProperties);
-        }*/
+        /* public void RegisterDynamciSuperProperties(IDynamicSuperProperties superProperties)
+         {
+             _registerDynamciSuperProperties(superProperties);
+         }*/
 
     }
 }

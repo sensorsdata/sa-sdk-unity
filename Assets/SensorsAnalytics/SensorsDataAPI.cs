@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using SensorDataAnalytics.Utils;
 using SensorsAnalytics.Wrapper;
 using System.Collections.Generic;
@@ -22,7 +23,8 @@ using UnityEngine;
 
 namespace SensorsAnalytics
 {
-
+    // App 平台
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
     public enum NetworkType
     {
         NONE = 0,
@@ -32,10 +34,24 @@ namespace SensorsAnalytics
         TYPE_WIFI = 1 << 3,
         TYPE_5G = 1 << 4,
         TYPE_ALL = 0xff
-    }    public enum AutoTrackType
+    }
+    
+#else
+    // PC 端
+    public enum NetworkType
     {
+        NONE = 0,
+        TYPE_ALL = 0xff
+    }#endif
+
+    /// <summary>    /// 配置全埋点    /// </summary>
+    public enum AutoTrackType
+    {
+        /// <summary>        /// 不自动采集全埋点事件        /// </summary>
         None = 0,
+        /// <summary>        /// 当应用进入前台自动触发 $AppStart 事件        /// </summary>
         AppStart = 1,
+        /// <summary>        /// 当应用进入后台自动触发 $AppEnd 事件        /// </summary>
         AppEnd = 1 << 1
     }
 
@@ -44,22 +60,20 @@ namespace SensorsAnalytics
         /// <summary>
         /// 当前 Unity SDK 版本
         /// </summary>
-        public readonly static string SDK_VERSION = "1.0.4";
+        public readonly static string SDK_VERSION = "2.0.0";
         [Header("SensorsData Unity SDK Config")]
         [HideInInspector]
         public string serverUrl = "请输入数据接收地址...";
         [HideInInspector]
         public bool isEnableLog = false;
 
-        [HideInInspector]
-        public AutoTrackType autoTrackType = AutoTrackType.None;
-        [HideInInspector]
+        [HideInInspector]        public AutoTrackType autoTrackType = AutoTrackType.None;
+        [HideInInspector]#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
         public NetworkType networkType = NetworkType.TYPE_3G | NetworkType.TYPE_4G | NetworkType.TYPE_5G | NetworkType.TYPE_WIFI;
-
-
+#else
+        public NetworkType networkType = NetworkType.TYPE_ALL;#endif
         #region internal use
-
-        private static SensorsDataAPI saInstance;
+        private static SensorsDataAPI saInstance;
         //private static ReaderWriterLockSlim lockObj = new ReaderWriterLockSlim();
         private static SensorsAnalyticsWrapper analyticsWrapper;
         private static volatile bool isFirstEvent = true;
@@ -80,7 +94,7 @@ namespace SensorsAnalytics
                 Destroy(gameObject);
                 return;
             }
-            analyticsWrapper = new SensorsAnalyticsWrapper(serverUrl, isEnableLog, (int)autoTrackType, (int)networkType);
+            analyticsWrapper = new SensorsAnalyticsWrapper(serverUrl, isEnableLog, (int)autoTrackType, (int)networkType, saInstance);
         }
         #endregion
 
@@ -111,8 +125,7 @@ namespace SensorsAnalytics
                 {
                     properties = new Dictionary<string, object>();
                 }
-                List<string> list = new List<string>();
-                list.Add("unity:" + SDK_VERSION);
+                List<string> list = new List<string>                {                    "unity:" + SDK_VERSION                };
                 properties.Add("$lib_plugin_version", list);
             }
             analyticsWrapper.Track(eventName, properties);
@@ -289,7 +302,7 @@ namespace SensorsAnalytics
         }
 
         /// <summary>
-        /// 设置本地缓存最大事件条数，默认和最小值都是 10000 条
+        /// 设置 iOS 上本地缓存最大事件条数，默认和最小值都是 10000 条
         /// </summary>
         /// <param name="maxCount">最大缓存条数</param>
         public static void SetiOSMaxCacheSize(int maxCount)
@@ -298,6 +311,12 @@ namespace SensorsAnalytics
             analyticsWrapper.SetiOSMaxCacheSize(maxCount);
             #endif
         }
+
+        /// <summary>
+        /// 设置 PC 运行的本地缓存最大事件条数，默认和最小值都是 10000 条
+        /// </summary>
+        /// <param name="maxCount">最大缓存条数</param>
+        public static void SetPCMaxCacheSize(int maxCount)        {            #if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR            analyticsWrapper.SetPCMaxCacheSize(maxCount);            #endif        }
 
         /// <summary>
         /// 删除缓存的所有事件
@@ -324,12 +343,11 @@ namespace SensorsAnalytics
         public static void SetFlushInterval(int flushInteval)
         {
             analyticsWrapper.SetFlushInterval(flushInteval);
-        }
-
-        /// <summary>
+        }        /// <summary>
         /// 设置 flush 时网络发送策略
+        /// Android & iOS 支持设置 2G、3G、WIFI 网络策略；PC 上只支持设置 NONE 或 ALL
         /// </summary>
-        /// <param name="types">类似：NetworkType.Type_2G + NetworkType.Type_3G</param>
+        /// <param name="types">类似：NetworkType.Type_2G | NetworkType.Type_3G</param>
         public static void SetFlushNetworkPolicy(int types)
         {
             analyticsWrapper.SetFlushNetworkPolicy(types);
@@ -346,3 +364,4 @@ namespace SensorsAnalytics
     }
 
 }
+

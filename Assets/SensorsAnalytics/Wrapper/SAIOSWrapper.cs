@@ -14,6 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#if (UNITY_IOS && !UNITY_EDITOR)
+
 using System.Collections.Generic;
 using SensorDataAnalytics.Utils;
 using UnityEngine;
@@ -23,7 +26,8 @@ namespace SensorsAnalytics.Wrapper
 {
     public partial class SensorsAnalyticsWrapper
     {
-#if (UNITY_IOS && !UNITY_EDITOR)
+
+// iOS 平台下，用于调用 Objective-C 中定义的本地库声明
         [DllImport("__Internal")]
         private static extern void start(string server_url, bool enableLog, int eventType, int networkType);
         [DllImport("__Internal")]
@@ -131,10 +135,6 @@ namespace SensorsAnalytics.Wrapper
             identify(anonymousId);
         }
 
-        private void _resetAnonymousId()
-        {
-        }
-
         private void _login(string loginId)
         {
             login(loginId);
@@ -214,7 +214,7 @@ namespace SensorsAnalytics.Wrapper
         }
         #endregion
 
-#endif
-
     }
 }
+
+#endif

@@ -14,6 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*
+#if !UNITY_EDITOR
+
 using System.Collections.Generic;
 using SensorDataAnalytics.Utils;
 using UnityEngine;
@@ -23,7 +27,6 @@ namespace SensorsAnalytics.Wrapper
     public partial class SensorsAnalyticsWrapper
     {
 
-#if UNITY_EDITOR
         private void _init()
         {
             SALog.Debug("Editor Log: calling init.");
@@ -37,11 +40,6 @@ namespace SensorsAnalytics.Wrapper
         private void _identify(string anonymousId)
         {
             SALog.Debug("Editor Log: calling identity: anonymousId=" + anonymousId + ".");
-        }
-
-        private void _resetAnonymousId()
-        {
-            SALog.Debug("Editor Log: calling resetAnonymousId.");
         }
 
         private void _login(string loginId)
@@ -162,11 +160,14 @@ namespace SensorsAnalytics.Wrapper
             SALog.Debug("Editor Log: calling SetFlushNetworkPolicy: types=" + types);
         }
 
-        /*public void _registerDynamciSuperProperties(IDynamicSuperProperties superProperties)
-        {
-            SALog.Debug("Editor Log: calling RegisterDynamciSuperProperties: superProperties=" + superProperties);
-        }*/
+        //public void _registerDynamciSuperProperties(IDynamicSuperProperties superProperties)
+        //{
+        //    SALog.Debug("Editor Log: calling RegisterDynamciSuperProperties: superProperties=" + superProperties);
+        //}
 
-#endif
     }
 }
+
+#endif
+
+*/

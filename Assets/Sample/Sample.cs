@@ -15,15 +15,15 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
     private Vector2 scrollVector2;
     private bool finalResult = false;
 
+    static Sample saInstance;
     // Start is called before the first frame update
     void Awake()
-    {
-        print("sample awake====");
-    }
+    {        //判断是否需要 SDK 处理         if (saInstance == null)        {            DontDestroyOnLoad(gameObject);            saInstance = this;            Application.deepLinkActivated += handSchemeUrl;        }        else        {            Destroy(gameObject);            return;        }    }
 
     private void handSchemeUrl(string url)
     {
-
+        print("======deeplink url:  " + url);
+        SensorsDataAPI.HandleSchemeUrl(url); //调用封装好的方法
     }
 
     private void OnGUI()
@@ -40,16 +40,7 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
 
 
         if (GUILayout.Button("Track 事件"))
-        {
-            DateTime dateTime = DateTime.Now;
-            
-            Dictionary<string, object> dictionary = new Dictionary<string, object>();
-            dictionary.Add("country", "中国");
-            dictionary.Add("current_time", dateTime);
-            //dictionary.Add("test_array", new int[] { 1, 2, 3, 4, 5 });
-
-            print("Track an Event.");
-            SensorsDataAPI.Track("track_test1", dictionary);
+        {            DateTime dateTime = DateTime.Now;            Dictionary<string, object> dictionary = new Dictionary<string, object>();            dictionary.Add("country", "中国");            dictionary.Add("current_time", dateTime);            //dictionary.Add("test_array", new int[] { 1, 2, 3, 4, 5 });            print("Track an Event.");            SensorsDataAPI.Track("track_test1", dictionary);
         }
 
        
@@ -73,8 +64,14 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             if (GUILayout.Button("set ios max cache size"))
             {
                 print("set ios max cache size.");
-                SensorsDataAPI.SetiOSMaxCacheSize(20);
+                SensorsDataAPI.SetiOSMaxCacheSize(12000);
+            }            GUILayout.Space(20);
+            if (GUILayout.Button("set pc max cache size"))
+            {
+                print("set pc max cache size.");
+                SensorsDataAPI.SetPCMaxCacheSize(12000);
             }
+
             GUILayout.Space(20);
             if (GUILayout.Button("delete all"))
             {
@@ -125,7 +122,7 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             }
             //场景一中定义的测试按钮
             GUILayout.Space(20);
-            if (GUILayout.Button("Identiy"))
+            if (GUILayout.Button("Identify"))
             {
                 var random = new System.Random();                int randomId = random.Next(100000, 999999);
                 print($"identity test, anonymousId = identify_{randomId}");
@@ -183,37 +180,42 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             GUILayout.Space(20);
             if (GUILayout.Button("start timer"))
             {
-                print("start timer.");
+                string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                print($"start timer: {dateTime}");
                 SensorsDataAPI.TrackTimerStart("BuyGoods");
             }
             GUILayout.Space(20);
             if (GUILayout.Button("pause timer"))
             {
-                print("pause timer.");
+                string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                print("pause timer: " + dateTime);
                 SensorsDataAPI.TrackTimerPause("BuyGoods");
             }
             GUILayout.Space(20);
             if (GUILayout.Button("resume timer"))
             {
-                print("resume timer.");
+                string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                print("resume timer: " + dateTime);
                 SensorsDataAPI.TrackTimerResume("BuyGoods");
             }
             GUILayout.Space(20);
             if (GUILayout.Button("end timer"))
             {
-                print("end timer.");
+                string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                print("end timer: "+ dateTime);
                 SensorsDataAPI.TrackTimerEnd("BuyGoods");
             }
             GUILayout.Space(20);
             if (GUILayout.Button("clear timer"))
             {
-                print("clear timer.");
+                string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                print("clear timer: " + dateTime);
                 SensorsDataAPI.ClearTrackTimer();
             }
             GUILayout.Space(20);
             if (GUILayout.Button("remove timer"))
-            {
-                print("remove timer.");
+            {                string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                print("remove timer: " + dateTime);
                 SensorsDataAPI.RemoveTimer("BuyGoods");
             }
             GUILayout.Space(20);

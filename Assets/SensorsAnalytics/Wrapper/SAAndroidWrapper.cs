@@ -14,6 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#if (UNITY_ANDROID && !UNITY_EDITOR)
+
 using System.Collections.Generic;
 using SensorDataAnalytics.Utils;
 using UnityEngine;
@@ -22,7 +25,6 @@ namespace SensorsAnalytics.Wrapper
 {
     public partial class SensorsAnalyticsWrapper
     {
-#if (UNITY_ANDROID && !UNITY_EDITOR)
 
         private static readonly AndroidJavaClass sensorsDataAPIClass = new AndroidJavaClass("com.sensorsdata.analytics.android.sdk.SensorsDataAPI");
         private AndroidJavaObject apiInstance;
@@ -50,11 +52,6 @@ namespace SensorsAnalytics.Wrapper
         private void _identify(string anonymousId)
         {
             apiInstance.Call("identify", anonymousId);
-        }
-
-        private void _resetAnonymousId()
-        {
-            apiInstance.Call("resetAnonymousId");
         }
 
         private void _login(string loginId)
@@ -245,6 +242,8 @@ namespace SensorsAnalytics.Wrapper
              AndroidSuperDynamicCallback callback = new AndroidSuperDynamicCallback(superProperties);
              apiInstance.Call("registerDynamicSuperProperties", callback);
          }*/
-#endif
+
     }
 }
+
+#endif

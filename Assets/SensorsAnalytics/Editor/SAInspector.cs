@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(SensorsDataAPI))]
+
 public class SA_Inspector : Editor
 {
 
@@ -75,7 +76,7 @@ public class SA_Inspector : Editor
     private void NetworkTypes()
     {
         int tmpResult = 0;
-        EditorGUILayout.LabelField("NetworkTypes", labelStyle);
+        EditorGUILayout.LabelField("NetworkTypes（只支持 Android & iOS）", labelStyle);
         if (EditorGUILayout.Toggle("2G", (finalNetworkType & 1) != 0))
         {
             tmpResult = 1;
@@ -97,7 +98,7 @@ public class SA_Inspector : Editor
             tmpResult |= 1 << 3;
         }
        
-        finalNetworkType = tmpResult;
-        this.serializedObject.FindProperty("networkType").intValue = finalNetworkType;
-    }
+        finalNetworkType = tmpResult;        // 初始化配置，设置网络策略，只针对 Android & iOS 生效        this.serializedObject.FindProperty("networkType").intValue = finalNetworkType;    }
+
+
 }
