@@ -8,7 +8,7 @@
 
 ## SDK 简介
 
-Unity SDK 是一款用于 Unity 游戏引擎的埋点 SDK，支持 Android、iOS、Windows 和 macOS。
+Unity SDK 是一款用于 Android、iOS 平台 Unity App 埋点的 SDK。
 
 ## 集成文档
 
