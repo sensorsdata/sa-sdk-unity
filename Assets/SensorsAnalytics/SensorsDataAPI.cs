@@ -60,7 +60,7 @@ namespace SensorsAnalytics
         /// <summary>
         /// 当前 Unity SDK 版本
         /// </summary>
-        public readonly static string SDK_VERSION = "2.0.0";
+        public readonly static string SDK_VERSION = "2.0.1";
         [Header("SensorsData Unity SDK Config")]
         [HideInInspector]
         public string serverUrl = "请输入数据接收地址...";
@@ -154,7 +154,14 @@ namespace SensorsAnalytics
         public static void Logout()
         {
             analyticsWrapper.Logout();
-        }
+        }        /// <summary>
+        /// 获取用户的唯一用户标识
+        /// </summary>
+        /// <returns></returns>
+        public static string DistinctId()        {            return analyticsWrapper.DistinctId();        }        /// <summary>
+        /// 获取用户登录唯一标识符
+        /// </summary>
+        /// <returns></returns>        public static string LoginId()        {            return analyticsWrapper.LoginId();        }
 
         /// <summary>
         /// 设置用户的一个或多个 profile，profile 如果存在，则覆盖，否则就新创建

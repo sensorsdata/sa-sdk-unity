@@ -10,7 +10,7 @@ namespace SensorsAnalyticsPCSDK.Constant{    public enum SANetworkType
         AppStart = 1 << 0,
         AppEnd = 1 << 1
     }    /// <summary>    /// PC SDK 全局常量定义    /// </summary>    public class SAConstant
-    {        // Unity SDK 版本号，注意和外部插件版本号相同，防止理解歧义        public static readonly string kSALibVersion = "2.0.0";
+    {        // Unity SDK 版本号，注意和外部插件版本号相同，防止理解歧义        public static readonly string kSALibVersion = "2.0.1";
 
         public static readonly string kSAEventPresetPropertyLibName = "Unity";
 

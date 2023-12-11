@@ -67,6 +67,8 @@ namespace SensorsAnalytics.Wrapper
             _logout();
         }
 
+        public string DistinctId()        {            return _distinctId();        }        public string LoginId()        {            return _loginId();        }
+
         public void Track(string eventName, Dictionary<string, object> properties = null)
         {
             _track(eventName, properties);

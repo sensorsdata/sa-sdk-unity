@@ -62,6 +62,8 @@ namespace SensorsAnalytics.Wrapper
             SDKIntance.Logout();
         }
 
+        private string _distinctId()        {            return SDKIntance.DistinctId();        }        private string _loginId()        {            return SDKIntance.LoginId();        }
+
         private void _track(string eventName, Dictionary<string, object> dic = null)
         {
             SDKIntance.Track(eventName, dic);

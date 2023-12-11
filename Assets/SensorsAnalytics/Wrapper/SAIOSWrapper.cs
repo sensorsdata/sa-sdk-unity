@@ -13,9 +13,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-#if (UNITY_IOS && !UNITY_EDITOR)
+ */#if (UNITY_IOS && !UNITY_EDITOR)
 
 using System.Collections.Generic;
 using SensorDataAnalytics.Utils;
@@ -32,10 +30,18 @@ namespace SensorsAnalytics.Wrapper
         private static extern void start(string server_url, bool enableLog, int eventType, int networkType);
         [DllImport("__Internal")]
         private static extern void track(string event_name, string propertiesJson);
+
         [DllImport("__Internal")]
         private static extern void login(string loginId);
         [DllImport("__Internal")]
         private static extern void logout();
+        [DllImport("__Internal")]
+        private static extern void identify(string anonymousId);
+        [DllImport("__Internal")]
+        private static extern string distinctId();
+        [DllImport("__Internal")]
+        private static extern string loginId();
+
         [DllImport("__Internal")]
         private static extern string track_timer_start(string eventName);
         [DllImport("__Internal")]
@@ -46,6 +52,8 @@ namespace SensorsAnalytics.Wrapper
         private static extern void track_timer_end(string eventName, string propertiesJson);
         [DllImport("__Internal")]
         private static extern void clear_track_timer();
+        [DllImport("__Internal")]
+        private static extern void remove_timer(string eventname);
 
         [DllImport("__Internal")]
         private static extern void register_super_properties(string propertiesJson);
@@ -54,23 +62,22 @@ namespace SensorsAnalytics.Wrapper
         [DllImport("__Internal")]
         private static extern void clear_super_properties();
         [DllImport("__Internal")]
+        private static extern string get_super_properties();
+
+        [DllImport("__Internal")]
         private static extern void flush();
+
         [DllImport("__Internal")]
         private static extern void profile_set(string propertiesJson);
         [DllImport("__Internal")]
         private static extern void profile_set_once(string propertiesJson);
-        [DllImport("__Internal")]
-        private static extern string get_super_properties();
-        [DllImport("__Internal")]
-        private static extern void identify(string anonymousId);
+
         [DllImport("__Internal")]
         private static extern void handle_scheme_url(string url);
         [DllImport("__Internal")]
         private static extern void delete_all();
         [DllImport("__Internal")]
         private static extern void set_flush_network_policy(int types);
-        [DllImport("__Internal")]
-        private static extern void remove_timer(string eventname);
         [DllImport("__Internal")]
         private static extern void set_ios_max_cache_size(int count);
         [DllImport("__Internal")]
@@ -143,6 +150,16 @@ namespace SensorsAnalytics.Wrapper
         private void _logout()
         {
             logout();
+        }
+
+        private string _distinctId()
+        {
+            return distinctId();
+        }
+
+        private string _loginId()
+        {
+            return loginId();
         }
 
         private void _profileSet(Dictionary<string, object> dic)

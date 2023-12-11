@@ -40,7 +40,7 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
 
 
         if (GUILayout.Button("Track 事件"))
-        {            DateTime dateTime = DateTime.Now;            Dictionary<string, object> dictionary = new Dictionary<string, object>();            dictionary.Add("country", "中国");            dictionary.Add("current_time", dateTime);            //dictionary.Add("test_array", new int[] { 1, 2, 3, 4, 5 });            print("Track an Event.");            SensorsDataAPI.Track("track_test1", dictionary);
+        {            DateTime dateTime = DateTime.Now;            Dictionary<string, object> dictionary = new Dictionary<string, object>();            dictionary.Add("country", "中国");            dictionary.Add("current_time", dateTime);            dictionary.Add("double_value", 1234.567);            dictionary.Add("float_value", 12.12f);            dictionary.Add("int_value", 1234);            dictionary.Add("bool_value", true);            dictionary.Add("array_int", new int[] { 1, 2, 3, 4, 5 });            dictionary.Add("array_string", new string[] { "item1", "item2", "item3", "item4" });            dictionary.Add("current_language", Application.systemLanguage.ToString());            print("Track an Event.");            SensorsDataAPI.Track("track_test1", dictionary);
         }
 
        
@@ -139,7 +139,19 @@ public class Sample : MonoBehaviour,IDynamicSuperProperties
             {
                 print("logout test.");
                 SensorsDataAPI.Logout();
+            }            GUILayout.Space(20);
+            if (GUILayout.Button("distinctId"))
+            {
+                string distinctId = SensorsDataAPI.DistinctId();
+                print("get distinctId: " + distinctId);                //Dictionary<string, object> dictionary = new Dictionary<string, object>();                //dictionary.Add("distinctId", distinctId);
+                //SensorsDataAPI.Track("track_distinctId", dictionary);
+            }            GUILayout.Space(20);
+            if (GUILayout.Button("loginId"))
+            {                string loginId = SensorsDataAPI.LoginId();
+                print("get loginId: " + loginId);                //Dictionary<string, object> dictionary = new Dictionary<string, object>();                //dictionary.Add("loginId", loginId);
+                //SensorsDataAPI.Track("track_loginId", dictionary);
             }
+
             GUILayout.Space(20);
             if (GUILayout.Button("Profile Set"))
             {

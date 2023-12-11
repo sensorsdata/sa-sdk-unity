@@ -1,47 +1,35 @@
 ﻿/*
- * Copyright (c) 2013 Calvin Rien
- *
- * Based on the JSON parser by Patrick van Bergen
- * http://techblog.procurios.nl/k/618/news/view/14605/14863/How-do-I-write-my-own-parser-for-JSON.html
- *
- * Simplified it so that it doesn't throw exceptions
- * and can be used in Unity iPhone with maximum code stripping.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * MIT License.  Forked from GA_MiniJSON.
+ * We modified it to meet the data collection of SensorsAnalytics Unity SDK
  */
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using System.Globalization;using System.IO;
 using System.Text;
 
 namespace SensorsAnalyticsPCSDK.Utils{
-    public static class SAJSON
-	{
-		   /// <summary>
+
+    /* Based on the JSON parser from 
+	 * http://techblog.procurios.nl/k/618/news/view/14605/14863/How-do-I-write-my-own-parser-for-JSON.html
+	 * 
+	 * I simplified it so that it doesn't throw exceptions
+	 * and can be used in Unity iPhone with maximum code stripping.
+	 */    /// <summary>
+    /// This class encodes and decodes JSON strings.
+    /// Spec. details, see http://www.json.org/
+    /// 
+    /// JSON uses Arrays and Objects. These correspond here to the datatypes ArrayList and Hashtable.
+    /// All numbers are parsed to floats.
+    /// </summary>
+    public class SAJSON    {
+        /// <summary>
         /// Parses the string json into a value
         /// </summary>
         /// <param name="json">A JSON string.</param>
         /// <returns>An List&lt;object&gt;, a Dictionary&lt;string, object&gt;, a double, an integer,a string, null, true, or false</returns>
-        public static object Deserialize(string json)
+        public static Dictionary<string, object> Deserialize(string json)
         {
             // save the string for debug information
             if (json == null)
@@ -84,11 +72,11 @@ namespace SensorsAnalyticsPCSDK.Utils{
                 json = new StringReader(jsonString);
             }
 
-            public static object Parse(string jsonString)
+            public static Dictionary<string, object> Parse(string jsonString)
             {
                 using (var instance = new Parser(jsonString))
                 {
-                    return instance.ParseValue();
+                    return instance.ParseObject();
                 }
             }
 
@@ -183,7 +171,13 @@ namespace SensorsAnalyticsPCSDK.Utils{
                 switch (token)
                 {
                     case TOKEN.STRING:
-                        return ParseString();
+                        string str = ParseString();
+                        DateTime dateTime;
+                        if (DateTime.TryParseExact(str, "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
+                        {
+                            return dateTime;
+                        }
+                        return str;
                     case TOKEN.NUMBER:
                         return ParseNumber();
                     case TOKEN.CURLY_OPEN:
@@ -288,7 +282,10 @@ namespace SensorsAnalyticsPCSDK.Utils{
                 }
 
                 double parsedDouble;
-                Double.TryParse(number, out parsedDouble);
+                if (!Double.TryParse(number, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out parsedDouble))
+                {
+                    Double.TryParse(number, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.CreateSpecificCulture("es-ES"), out parsedDouble);
+                }
                 return parsedDouble;
             }
 
@@ -405,23 +402,25 @@ namespace SensorsAnalyticsPCSDK.Utils{
         /// </summary>
         /// <param name="json">A Dictionary&lt;string, object&gt; / List&lt;object&gt;</param>
         /// <returns>A JSON encoded string, or null if object 'json' is not serializable</returns>
-        public static string Serialize(object obj)
+        public static string Serialize(object obj, Func<DateTime, string> func = null)
         {
-            return Serializer.Serialize(obj);
+            return Serializer.Serialize(obj, func);
         }
 
         sealed class Serializer
         {
             StringBuilder builder;
+            Func<DateTime, string> func;
 
             Serializer()
             {
                 builder = new StringBuilder();
             }
 
-            public static string Serialize(object obj)
+            public static string Serialize(object obj, Func<DateTime, string> func)
             {
                 var instance = new Serializer();
+                instance.func = func;
 
                 instance.SerializeValue(obj);
 
@@ -564,7 +563,7 @@ namespace SensorsAnalyticsPCSDK.Utils{
                 // Previously floats and doubles lost precision too.
                 if (value is float)
                 {
-                    builder.Append(((float)value).ToString("R"));
+                    builder.Append(((float)value).ToString("R", System.Globalization.CultureInfo.InvariantCulture));
                 }
                 else if (value is int
                   || value is uint
@@ -580,7 +579,21 @@ namespace SensorsAnalyticsPCSDK.Utils{
                 else if (value is double
                   || value is decimal)
                 {
-                    builder.Append(Convert.ToDouble(value).ToString("R"));
+                    builder.Append(Convert.ToDouble(value).ToString("R", System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else if (value is DateTime)
+                {
+                    builder.Append('\"');
+                    DateTime dateTime = (DateTime)value;
+                    if (null != func)
+                    {
+                        builder.Append(func((DateTime)value));
+                    }
+                    else
+                    {
+                        builder.Append(dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture));
+                    }
+                    builder.Append('\"');
                 }
                 else
                 {
@@ -588,8 +601,7 @@ namespace SensorsAnalyticsPCSDK.Utils{
                 }
             }
         }
-		
-	}
+    }
 }
 
 

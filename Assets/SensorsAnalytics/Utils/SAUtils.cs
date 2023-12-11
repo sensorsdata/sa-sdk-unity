@@ -61,7 +61,7 @@ namespace SensorDataAnalytics.Utils
             }
             try
             {
-                return MiniJSON.Json.Serialize(dictionary);
+                return SAMiniJSON.Serialize(dictionary);
             }
             catch (Exception e)
             {
@@ -83,7 +83,7 @@ namespace SensorDataAnalytics.Utils
             }
             try
             {
-                return MiniJSON.Json.Deserialize(jsonStr) as Dictionary<string, object>;
+                return SAMiniJSON.Deserialize(jsonStr) as Dictionary<string, object>;
             }
             catch (Exception ex)
             {

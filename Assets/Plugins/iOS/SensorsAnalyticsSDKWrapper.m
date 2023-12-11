@@ -37,6 +37,19 @@ void logout() {
     [[SensorsAnalyticsSDK sharedInstance] logout];
 }
 
+char* loginId() {
+    NSString *loginId = [SensorsAnalyticsSDK.sharedInstance loginId];
+    if (loginId) {
+        return strdup([loginId UTF8String]);
+    } else {
+        return NULL;
+    }
+}
+
+char* distinctId() {
+    return strdup([[SensorsAnalyticsSDK.sharedInstance distinctId] UTF8String]);
+}
+
 void profile_set(const char *properties) {
     NSDictionary *profileProps = nil;
     convertToDictionary(properties, &profileProps);

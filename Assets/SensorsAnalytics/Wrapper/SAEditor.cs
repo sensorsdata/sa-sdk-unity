@@ -52,6 +52,8 @@ namespace SensorsAnalytics.Wrapper
             SALog.Debug("Editor Log: calling logout.");
         }
 
+        private string _distinctId()        {            SALog.Debug("Editor Log: calling distinctId()");            return null;        }        private string _loginId()        {            SALog.Debug("Editor Log: calling loginId()");            return null        }
+
         private void _track(string eventName, Dictionary<string, object> properties = null)
         {
             SALog.Debug("Editor Log: calling track: eventName=" + eventName + ", properties=" + SAUtils.ToDebugString(properties));
