@@ -60,7 +60,7 @@ namespace SensorsAnalytics
         /// <summary>
         /// 当前 Unity SDK 版本
         /// </summary>
-        public readonly static string SDK_VERSION = "2.0.1";
+        public readonly static string SDK_VERSION = "2.0.3";
         [Header("SensorsData Unity SDK Config")]
         [HideInInspector]
         public string serverUrl = "请输入数据接收地址...";
@@ -360,14 +360,14 @@ namespace SensorsAnalytics
             analyticsWrapper.SetFlushNetworkPolicy(types);
         }
 
-       /* /// <summary>
-        /// 注册动态公共属性
-        /// </summary>
-        /// <param name="superProperties">动态公共属性需要实现的接口</param>
-        public static void RegisterDynamciSuperProperties(IDynamicSuperProperties superProperties)
-        {
-            analyticsWrapper.RegisterDynamciSuperProperties(superProperties);
-        }*/
+        /* /// <summary>
+         /// 注册动态公共属性
+         /// </summary>
+         /// <param name="superProperties">动态公共属性需要实现的接口</param>
+         public static void RegisterDynamciSuperProperties(IDynamicSuperProperties superProperties)
+         {
+             analyticsWrapper.RegisterDynamciSuperProperties(superProperties);
+         }*/
     }
 
 }

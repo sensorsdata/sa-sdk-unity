@@ -159,7 +159,7 @@ namespace SensorsAnalytics.Wrapper
 #endif
         }
 
-        public void SetPCMaxCacheSize(int maxCount)        {#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR            _setPCMaxCacheSize(maxCount);#endif        }
+        public void SetPCMaxCacheSize(int maxCount)        {#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR            _setPCMaxCacheSize(maxCount);#endif        }
 
         public void DeleteAll()
         {
@@ -180,6 +180,7 @@ namespace SensorsAnalytics.Wrapper
         {
             _setFlushNetworkPolicy(types);
         }
+
 
         /* public void RegisterDynamciSuperProperties(IDynamicSuperProperties superProperties)
          {
