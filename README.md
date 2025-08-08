@@ -1,6 +1,6 @@
 <img src="https://ow-file.sensorsdata.cn/www/home/header/sensors_header_icon.svg" width="200" >
 
-[![License](https://img.shields.io/github/license/sensorsdata/sa-sdk-unity.svg)](https://github.com/sensorsdata/sa-sdk-unity/blob/master/LICENSE)
+[![License: SensorsData Commercial](https://img.shields.io/badge/license-SensorsData--Commercial-orange.svg)](./LICENSE.txt)
 [![GitHub release](https://img.shields.io/github/tag/sensorsdata/sa-sdk-unity.svg?label=release)](https://github.com/sensorsdata/sa-sdk-unity/releases)
 [![GitHub release date](https://img.shields.io/github/release-date/sensorsdata/sa-sdk-unity.svg)](https://github.com/sensorsdata/sa-sdk-unity/releases)
 ![https://img.shields.io/badge/OS-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20macOS-blue](https://img.shields.io/badge/OS-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20macOS-blue)
