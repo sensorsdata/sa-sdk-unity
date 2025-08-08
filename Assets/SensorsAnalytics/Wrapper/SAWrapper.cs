@@ -41,10 +41,13 @@ namespace SensorsAnalytics.Wrapper
             SALog.IsLogEnalbe(enableLog);
             SALog.Debug("Unity Config=======init serverUrl:" + serverUrl + ", enableLog:" + enableLog
                 + ", networkType:" + networkType);
- #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
-            _init();#else
-         _init(mono);   
-#endif         }
+
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+            _init();
+#else
+            _init(mono);
+#endif
+        }
 
 
         public void Flush()
@@ -67,7 +70,20 @@ namespace SensorsAnalytics.Wrapper
             _logout();
         }
 
-        public string DistinctId()        {            return _distinctId();        }        public string LoginId()        {            return _loginId();        }
+        public string DistinctId()
+        {
+            return _distinctId();
+        }
+
+        public string LoginId()
+        {
+            return _loginId();
+        }
+
+        public string AnonymousId()
+        {
+            return _anonymousId();
+        }
 
         public void Track(string eventName, Dictionary<string, object> properties = null)
         {
@@ -159,7 +175,15 @@ namespace SensorsAnalytics.Wrapper
 #endif
         }
 
-        public void SetPCMaxCacheSize(int maxCount)        {#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR            _setPCMaxCacheSize(maxCount);#endif        }
+        public void SetPCMaxCacheSize(int maxCount)
+        {
+
+
+
+#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
+            _setPCMaxCacheSize(maxCount);
+#endif
+        }
 
         public void DeleteAll()
         {

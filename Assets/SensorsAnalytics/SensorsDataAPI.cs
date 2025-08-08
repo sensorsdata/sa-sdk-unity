@@ -42,16 +42,25 @@ namespace SensorsAnalytics
     {
         NONE = 0,
         TYPE_ALL = 0xff
-    }#endif
+    }
+#endif
 
-    /// <summary>    /// 配置全埋点    /// </summary>
+    /// <summary>
+    /// 配置全埋点
+    /// </summary>
     public enum AutoTrackType
     {
-        /// <summary>        /// 不自动采集全埋点事件        /// </summary>
+        /// <summary>
+        /// 不自动采集全埋点事件
+        /// </summary>
         None = 0,
-        /// <summary>        /// 当应用进入前台自动触发 $AppStart 事件        /// </summary>
+        /// <summary>
+        /// 当应用进入前台自动触发 $AppStart 事件
+        /// </summary>
         AppStart = 1,
-        /// <summary>        /// 当应用进入后台自动触发 $AppEnd 事件        /// </summary>
+        /// <summary>
+        /// 当应用进入后台自动触发 $AppEnd 事件
+        /// </summary>
         AppEnd = 1 << 1
     }
 
@@ -60,20 +69,25 @@ namespace SensorsAnalytics
         /// <summary>
         /// 当前 Unity SDK 版本
         /// </summary>
-        public readonly static string SDK_VERSION = "2.0.3";
+        public readonly static string SDK_VERSION = "2.1.0";
         [Header("SensorsData Unity SDK Config")]
         [HideInInspector]
         public string serverUrl = "请输入数据接收地址...";
         [HideInInspector]
         public bool isEnableLog = false;
 
-        [HideInInspector]        public AutoTrackType autoTrackType = AutoTrackType.None;
-        [HideInInspector]#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+        [HideInInspector]
+        public AutoTrackType autoTrackType = AutoTrackType.None;
+        [HideInInspector]
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
         public NetworkType networkType = NetworkType.TYPE_3G | NetworkType.TYPE_4G | NetworkType.TYPE_5G | NetworkType.TYPE_WIFI;
 #else
-        public NetworkType networkType = NetworkType.TYPE_ALL;#endif
+        public NetworkType networkType = NetworkType.TYPE_ALL;
+
+#endif
         #region internal use
-        private static SensorsDataAPI saInstance;
+
+        private static SensorsDataAPI saInstance;
         //private static ReaderWriterLockSlim lockObj = new ReaderWriterLockSlim();
         private static SensorsAnalyticsWrapper analyticsWrapper;
         private static volatile bool isFirstEvent = true;
@@ -121,11 +135,14 @@ namespace SensorsAnalytics
             if (isFirstEvent)
             {
                 isFirstEvent = false;
-                if(properties == null)
+                if (properties == null)
                 {
                     properties = new Dictionary<string, object>();
                 }
-                List<string> list = new List<string>                {                    "unity:" + SDK_VERSION                };
+                List<string> list = new List<string>
+                {
+                    "unity:" + SDK_VERSION
+                };
                 properties.Add("$lib_plugin_version", list);
             }
             analyticsWrapper.Track(eventName, properties);
@@ -154,14 +171,34 @@ namespace SensorsAnalytics
         public static void Logout()
         {
             analyticsWrapper.Logout();
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// 获取用户的唯一用户标识
         /// </summary>
-        /// <returns></returns>
-        public static string DistinctId()        {            return analyticsWrapper.DistinctId();        }        /// <summary>
+        /// <returns>distinctId</returns>
+        public static string DistinctId()
+        {
+            return analyticsWrapper.DistinctId();
+        }
+
+        /// <summary>
         /// 获取用户登录唯一标识符
         /// </summary>
-        /// <returns></returns>        public static string LoginId()        {            return analyticsWrapper.LoginId();        }
+        /// <returns>登录 Id</returns>
+        public static string LoginId()
+        {
+            return analyticsWrapper.LoginId();
+        }
+
+        /// <summary>
+        /// 获取匿名 ID，匿名 ID 是用户未登录时的唯一标识符
+        /// </summary>
+        /// <returns>匿名 Id</returns>
+        public static string AnonymousId()
+        {
+            return analyticsWrapper.AnonymousId();
+        }
 
         /// <summary>
         /// 设置用户的一个或多个 profile，profile 如果存在，则覆盖，否则就新创建
@@ -189,7 +226,9 @@ namespace SensorsAnalytics
         public static string TrackTimerStart(string eventName)
         {
             return analyticsWrapper.TrackTimerStart(eventName);
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// 结束事件计时器，并记录此事件信息
         /// </summary>
         /// <param name="eventName">事件名称或事件的 eventId</param>
@@ -280,9 +319,16 @@ namespace SensorsAnalytics
         public static void HandleSchemeUrl(string url)
         {
             analyticsWrapper.HandleSchemeUrl(url);
-        }        /// <summary>        /// 用于 App 首次启动时追踪渠道来源并设置渠道事件的属性        /// </summary>        /// <param name="properties">事件的属性</param>        /// <param name="disableCallback">是否关闭此次渠道匹配的回调请求</param>
+        }
+
+        /// <summary>
+        /// 用于 App 首次启动时追踪渠道来源并设置渠道事件的属性
+        /// </summary>
+        /// <param name="properties">事件的属性</param>
+        /// <param name="disableCallback">是否关闭此次渠道匹配的回调请求</param>
         /// <remarks>
-        /// 这个接口是一个较为复杂的功能，请在使用前先阅读相关说明: https://sensorsdata.cn/manual/track_installation.html，并在必要时联系我们的技术顾问同学。        /// </remarks>
+        /// 这个接口是一个较为复杂的功能，请在使用前先阅读相关说明: https://sensorsdata.cn/manual/track_installation.html，并在必要时联系我们的技术顾问同学。
+        /// </remarks>
         public static void TrackAppInstall(Dictionary<string, object> properties = null, bool disableCallback = false)
         {
             analyticsWrapper.TrackInstallation(properties, disableCallback);
@@ -303,9 +349,9 @@ namespace SensorsAnalytics
         /// <param name="maxCacheSize">单位 byte</param>
         public static void SetAndroidMaxCacheSize(long maxCacheSize)
         {
-            #if UNITY_ANDROID
+#if UNITY_ANDROID
             analyticsWrapper.SetAndroidMaxCacheSize(maxCacheSize);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -314,16 +360,21 @@ namespace SensorsAnalytics
         /// <param name="maxCount">最大缓存条数</param>
         public static void SetiOSMaxCacheSize(int maxCount)
         {
-            #if UNITY_IOS
+#if UNITY_IOS
             analyticsWrapper.SetiOSMaxCacheSize(maxCount);
-            #endif
+#endif
         }
 
         /// <summary>
         /// 设置 PC 运行的本地缓存最大事件条数，默认和最小值都是 10000 条
         /// </summary>
         /// <param name="maxCount">最大缓存条数</param>
-        public static void SetPCMaxCacheSize(int maxCount)        {            #if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR            analyticsWrapper.SetPCMaxCacheSize(maxCount);            #endif        }
+        public static void SetPCMaxCacheSize(int maxCount)
+        {
+#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
+            analyticsWrapper.SetPCMaxCacheSize(maxCount);
+#endif
+        }
 
         /// <summary>
         /// 删除缓存的所有事件
@@ -331,7 +382,9 @@ namespace SensorsAnalytics
         public static void DeleteAll()
         {
             analyticsWrapper.DeleteAll();
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// 设置本地缓存日志的最大条目数，最小 50 条
         /// </summary>
         /// <param name="flushBulkSize">缓存数目</param>
@@ -350,7 +403,9 @@ namespace SensorsAnalytics
         public static void SetFlushInterval(int flushInteval)
         {
             analyticsWrapper.SetFlushInterval(flushInteval);
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// 设置 flush 时网络发送策略
         /// Android & iOS 支持设置 2G、3G、WIFI 网络策略；PC 上只支持设置 NONE 或 ALL
         /// </summary>
@@ -371,4 +426,4 @@ namespace SensorsAnalytics
     }
 
 }
-
+

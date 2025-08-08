@@ -13,7 +13,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */#if (UNITY_IOS && !UNITY_EDITOR)
+ */
+
+#if (UNITY_IOS && !UNITY_EDITOR)
 
 using System.Collections.Generic;
 using SensorDataAnalytics.Utils;
@@ -41,6 +43,8 @@ namespace SensorsAnalytics.Wrapper
         private static extern string distinctId();
         [DllImport("__Internal")]
         private static extern string loginId();
+        [DllImport("__Internal")]
+        private static extern string anonymousId();
 
         [DllImport("__Internal")]
         private static extern string track_timer_start(string eventName);
@@ -160,6 +164,11 @@ namespace SensorsAnalytics.Wrapper
         private string _loginId()
         {
             return loginId();
+        }
+
+        private string _anonymousId()
+        {
+            return anonymousId();
         }
 
         private void _profileSet(Dictionary<string, object> dic)

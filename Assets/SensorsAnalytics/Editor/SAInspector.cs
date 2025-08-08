@@ -10,7 +10,11 @@ public class SA_Inspector : Editor
     bool isEnableLog = false;
     string serverUrl = "";
     GUIStyle titleStyle;
-    GUIStyle labelStyle;    //网络类型配置    int finalNetworkType = 0;
+    GUIStyle labelStyle;
+
+
+    //网络类型配置
+    int finalNetworkType = 0;
     //全埋点相关的配置
     int finalAutoTrackType = 0;
 
@@ -43,10 +47,15 @@ public class SA_Inspector : Editor
         EditorGUILayout.LabelField("Version", SensorsDataAPI.SDK_VERSION);
 
         // 初始化配置
+        if (string.IsNullOrEmpty(serverUrl))
+        {
+            EditorGUILayout.HelpBox("请输入数据接收地址...", MessageType.Warning);
+        }
         serverUrl = EditorGUILayout.TextField("Server Url", serverUrl);
 
         SensorsDataAPI sensorsDataAPI = (SensorsDataAPI)target;
         isEnableLog = EditorGUILayout.Toggle("Enable Log", isEnableLog);
+
         AutoTrackTypes();
         NetworkTypes();
         this.serializedObject.FindProperty("isEnableLog").boolValue = isEnableLog;
@@ -62,14 +71,16 @@ public class SA_Inspector : Editor
     private void AutoTrackTypes()
     {
         int tmpResult = 0;
-        EditorGUILayout.LabelField("AutoTrackTypes", labelStyle);        if (EditorGUILayout.Toggle("AppStart", (finalAutoTrackType & 1) != 0))
+        EditorGUILayout.LabelField("AutoTrackTypes", labelStyle);
+        if (EditorGUILayout.Toggle("AppStart", (finalAutoTrackType & 1) != 0))
         {
             tmpResult = 1;
         }
         if (EditorGUILayout.Toggle("AppEnd", (finalAutoTrackType & 1 << 1) != 0))
         {
             tmpResult |= 1 << 1;
-        }        finalAutoTrackType = tmpResult;
+        }
+        finalAutoTrackType = tmpResult;
         this.serializedObject.FindProperty("autoTrackType").intValue = finalAutoTrackType;
     }
 
@@ -97,8 +108,12 @@ public class SA_Inspector : Editor
         {
             tmpResult |= 1 << 3;
         }
-       
-        finalNetworkType = tmpResult;        // 初始化配置，设置网络策略，只针对 Android & iOS 生效        this.serializedObject.FindProperty("networkType").intValue = finalNetworkType;    }
+
+        finalNetworkType = tmpResult;
+
+        // 初始化配置，设置网络策略，只针对 Android & iOS 生效
+        this.serializedObject.FindProperty("networkType").intValue = finalNetworkType;
+    }
 
 
 }

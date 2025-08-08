@@ -50,6 +50,10 @@ char* distinctId() {
     return strdup([[SensorsAnalyticsSDK.sharedInstance distinctId] UTF8String]);
 }
 
+char* anonymousId() {
+    return strdup([[SensorsAnalyticsSDK.sharedInstance anonymousId] UTF8String]);
+}
+
 void profile_set(const char *properties) {
     NSDictionary *profileProps = nil;
     convertToDictionary(properties, &profileProps);

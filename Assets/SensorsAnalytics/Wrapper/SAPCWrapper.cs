@@ -31,7 +31,8 @@ namespace SensorsAnalytics.Wrapper
         private SensorsAnalyticsSDK SDKIntance;
 
         private void _init(MonoBehaviour mono = null)
-        {            SAConfigOptions  configOptions = new SAConfigOptions(serverUrl);
+        {
+            SAConfigOptions configOptions = new SAConfigOptions(serverUrl);
 
             // 初始化配置，网络策略不支持 PC
             configOptions.FlushNetworkPolicy = SANetworkType.ALL;
@@ -62,7 +63,20 @@ namespace SensorsAnalytics.Wrapper
             SDKIntance.Logout();
         }
 
-        private string _distinctId()        {            return SDKIntance.DistinctId();        }        private string _loginId()        {            return SDKIntance.LoginId();        }
+        private string _distinctId()
+        {
+            return SDKIntance.DistinctId();
+        }
+
+        private string _loginId()
+        {
+            return SDKIntance.LoginId();
+        }
+
+        private string _anonymousId()
+        {
+            return SDKIntance.AnonymousId();
+        }
 
         private void _track(string eventName, Dictionary<string, object> dic = null)
         {
@@ -108,7 +122,7 @@ namespace SensorsAnalytics.Wrapper
             SDKIntance.TrackTimerResume(eventName);
         }
 
-        
+
         private void _removeTimer(string eventName)
         {
             SDKIntance.RemoveTimer(eventName);
@@ -162,7 +176,10 @@ namespace SensorsAnalytics.Wrapper
             SDKIntance.DeleteAll();
         }
 
-        private void _setPCMaxCacheSize(int maxCount)        {            SDKIntance.SetMaxCacheSize(maxCount);        }
+        private void _setPCMaxCacheSize(int maxCount)
+        {
+            SDKIntance.SetMaxCacheSize(maxCount);
+        }
 
         private void _setFlushBulkSize(int flushBulkSize)
         {
